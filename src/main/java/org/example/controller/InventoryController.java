@@ -79,6 +79,6 @@ public class InventoryController {
         System.out.printf(
                 "Total Inventory Value: Rs. %.2f%n",
                 totalValue
-        );x
+        );
     }
 }

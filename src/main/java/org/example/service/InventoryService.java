@@ -27,10 +27,10 @@ public class InventoryService {
             while ((line = reader.readLine()) != null) {
 
                 try {
-                    // Handle the date containing a comma
+
                     line = line.replace("Oct 15, 2023", "15-Oct-2023");
 
-                    // Convert all separators into commas
+
                     line = line.replace("|", ",");
                     line = line.replace(";", ",");
 
@@ -80,19 +80,43 @@ public class InventoryService {
                 }
             }
 
+
         } catch (Exception e) {
             System.out.println("Could not read inventory file.");
         }
-
-        items.sort(
-                Comparator.comparing(
-                        Inventory::getCategory,
-                        String.CASE_INSENSITIVE_ORDER
-                ).thenComparing(Inventory::getPartCode)
-        );
+        sortInventory(items);
 
         return items;
     }
+
+        private void sortInventory(List<Inventory> items) {
+
+            for (int i = 0; i < items.size() - 1; i++) {
+
+                for (int j = 0; j < items.size() - i - 1; j++) {
+
+                    Inventory first = items.get(j);
+                    Inventory second = items.get(j + 1);
+
+
+                    if (first.getCategory().compareToIgnoreCase(second.getCategory()) > 0) {
+
+                        items.set(j, second);
+                        items.set(j + 1, first);
+                    }
+
+                    else if (first.getCategory().equalsIgnoreCase(second.getCategory())
+                            && first.getPartCode().compareToIgnoreCase(second.getPartCode()) > 0) {
+
+                        items.set(j, second);
+                        items.set(j + 1, first);
+                    }
+                }
+            }
+        }
+
+
+
 
     public int getTotalQuantity(List<Inventory> items) {
 
