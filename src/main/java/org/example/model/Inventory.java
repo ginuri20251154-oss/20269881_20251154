@@ -52,6 +52,9 @@ public class Inventory{
     public double getItemValue() {
         return price * quantity;
     }
+    public String getPartName() { return partName; }
+
+    public String getBrand() { return brand; }
 
     @Override
     public String toString() {

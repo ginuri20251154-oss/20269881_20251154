@@ -139,4 +139,41 @@ public class InventoryService {
 
         return total;
     }
+    public List<Inventory> searchInventory(
+            String partName,
+            String brand,
+            String category) {
+
+        List<Inventory> items = loadInventory();
+        List<Inventory> matchingItems = new ArrayList<>();
+
+        for (Inventory item : items) {
+
+            boolean matchesPartName =
+                    partName.isEmpty()
+                            || item.getPartName()
+                            .toLowerCase()
+                            .contains(partName.toLowerCase());
+
+            boolean matchesBrand =
+                    brand.isEmpty()
+                            || item.getBrand()
+                            .toLowerCase()
+                            .contains(brand.toLowerCase());
+
+            boolean matchesCategory =
+                    category.isEmpty()
+                            || item.getCategory()
+                            .equalsIgnoreCase(category);
+
+            if (matchesPartName
+                    && matchesBrand
+                    && matchesCategory) {
+
+                matchingItems.add(item);
+            }
+        }
+
+        return matchingItems;
+    }
 }
