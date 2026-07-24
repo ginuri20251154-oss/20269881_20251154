@@ -1,48 +1,36 @@
 package org.example.model;
 
 public class Dealer {
-    String dealerID;
-    String dealerName;
-    String dealerContact;
-    String dealerLocation;
-    public Dealer(String dealerID, String dealerName, String dealerContact, String dealerLocation){
-        setDealerID(dealerID);
-        setDealerName(dealerName);
-        setDealerContact(dealerContact);
-        setDealerLocation(dealerLocation);
-    }
+    private String dealerCode;
+    private String dealerName;
+    private String phoneNumber;
+    private String location;
 
-    public String getDealerID() {
 
-        return dealerID;
-    }
+    public Dealer(
+            String dealerCode,
+            String dealerName,
+            String phoneNumber,
+            String location
+            ) {
 
-    public void setDealerID(String dealerID) {
-        this.dealerID = dealerID;
-    }
-
-    public String getDealerName() {
-        return dealerName;
-    }
-
-    public void setDealerName(String dealerName) {
+        this.dealerCode = dealerCode;
         this.dealerName = dealerName;
+        this.phoneNumber = phoneNumber;
+        this.location = location;
+
     }
 
-    public String getDealerContact() {
-        return dealerContact;
+    public String getLocation() {
+        return location;
     }
 
-    public void setDealerContact(String dealerContact) {
-        this.dealerContact = dealerContact;
-    }
-
-    public String getDealerLocation() {
-        return dealerLocation;
-    }
-
-    public void setDealerLocation(String dealerLocation) {
-        this.dealerLocation = dealerLocation;
+    @Override
+    public String toString() {
+        return dealerCode + " | "
+                + dealerName + " | "
+                + phoneNumber + " | "
+                + location;
     }
 }
 

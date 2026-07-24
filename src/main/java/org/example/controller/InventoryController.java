@@ -9,13 +9,16 @@ import java.util.Scanner;
 public class InventoryController {
 
     private InventoryService inventoryService;
+    private DealerController dealerController;
     private Scanner scanner;
 
     public InventoryController(
             InventoryService inventoryService,
+            DealerController dealerController,
             Scanner scanner) {
 
         this.inventoryService = inventoryService;
+        this.dealerController = dealerController;
         this.scanner = scanner;
     }
 
@@ -27,7 +30,8 @@ public class InventoryController {
             System.out.println("\n===== INVENTORY MENU =====");
             System.out.println("1. View Inventory");
             System.out.println("2. Search Inventory");
-            System.out.println("3. Exit");
+            System.out.println("3. Random Dealer Selection");
+            System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
 
             choice = scanner.nextInt();
@@ -39,13 +43,16 @@ public class InventoryController {
             else if (choice==2){
                 searchInventory();
             }
-            else if (choice == 3) {
+            else if (choice==3){
+                dealerController.displayRandomDealers();
+            }
+            else if (choice == 4) {
                 System.out.println("Program closed.");}
                 else {
                 System.out.println("Invalid choice.");
             }
 
-        } while (choice != 3);
+        } while (choice != 4);
     }
 
     private void viewInventory() {
@@ -89,7 +96,7 @@ public class InventoryController {
     }
     private void searchInventory() {
 
-        // Clears the leftover Enter key after nextInt()
+
         scanner.nextLine();
 
         System.out.print("Enter part name or press Enter to skip: ");
