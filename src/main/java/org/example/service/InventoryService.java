@@ -71,6 +71,7 @@ public class InventoryService {
                             category,
                             stockDate,
                             imageName
+
                     );
 
                     items.add(item);

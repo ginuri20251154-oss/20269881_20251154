@@ -3,6 +3,41 @@ package org.example.model;
 import java.math.BigDecimal;
 
 public class Inventory{
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getStockDate() {
+        return stockDate;
+    }
+
+    public void setStockDate(String stockDate) {
+        this.stockDate = stockDate;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
+
+    public void setPartCode(String partCode) {
+        this.partCode = partCode;
+    }
 
     private String partCode;
     private String partName;
@@ -12,6 +47,7 @@ public class Inventory{
     private String category;
     private String stockDate;
     private String imageName;
+    private int threshold;
 
     public Inventory(
             String partCode,
@@ -19,6 +55,7 @@ public class Inventory{
             String brand,
             double price,
             int quantity,
+            int threshold,
             String category,
             String stockDate,
             String imageName) {
@@ -31,6 +68,7 @@ public class Inventory{
         this.category = category;
         this.stockDate = stockDate;
         this.imageName = imageName;
+        this.threshold=threshold;
     }
 
     public String getPartCode() {
@@ -55,6 +93,14 @@ public class Inventory{
     public String getPartName() { return partName; }
 
     public String getBrand() { return brand; }
+
+    public int getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
+    }
 
     @Override
     public String toString() {
