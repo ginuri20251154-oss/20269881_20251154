@@ -61,7 +61,7 @@ public class InventoryService {
                     if (data.length > 7 && !data[7].trim().isEmpty()) {
                         imageName = data[7].trim();
                     }
-
+                    int threshold = getDefaultThreshold(category);
                     Inventory item = new Inventory(
                             partCode,
                             partName,
@@ -70,7 +70,8 @@ public class InventoryService {
                             quantity,
                             category,
                             stockDate,
-                            imageName
+                            imageName,
+                            threshold
 
                     );
 
@@ -176,5 +177,44 @@ public class InventoryService {
         }
 
         return matchingItems;
+    }
+    private int getDefaultThreshold(String category) {
+
+        if (category.equalsIgnoreCase("Engine")) {
+            return 10;
+        } else if (category.equalsIgnoreCase("Electrical")) {
+            return 15;
+        } else if (category.equalsIgnoreCase("Brakes")) {
+            return 8;
+        } else if (category.equalsIgnoreCase("Bodywork")) {
+            return 5;
+        }
+
+        return 5;
+    }
+    public List<Inventory> getLowStockItems( List<Inventory> items) {
+
+        List<Inventory> lowStockItems = new ArrayList<>();  for (Inventory item : items) {  if (item.getQuantity() < item.getThreshold()) {  lowStockItems.add(item); } }  return lowStockItems;
+    }
+    public boolean updateLowStockThreshold(
+            List<Inventory> items,
+            String partCode,
+            int newThreshold) {
+
+        if (newThreshold < 0) {
+            return false;
+        }
+
+        for (Inventory item : items) {
+
+            if (item.getPartCode()
+                    .equalsIgnoreCase(partCode)) {
+
+                item.setThreshold(newThreshold);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

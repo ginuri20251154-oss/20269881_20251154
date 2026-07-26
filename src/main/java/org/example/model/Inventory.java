@@ -3,6 +3,43 @@ package org.example.model;
 import java.math.BigDecimal;
 
 public class Inventory{
+
+
+    private String partCode;
+    private String partName;
+    private String brand;
+    private double price;
+    private int quantity;
+
+    private String category;
+    private String stockDate;
+    private String imageName;
+    private int threshold;
+
+
+    public Inventory(
+            String partCode,
+            String partName,
+            String brand,
+            double price,
+            int quantity,
+
+            String category,
+            String stockDate,
+            String imageName,
+            int threshold) {
+
+        this.partCode = partCode;
+        this.partName = partName;
+        this.brand = brand;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
+        this.stockDate = stockDate;
+        this.imageName = imageName;
+        this.threshold=threshold;
+    }
+
     public String getImageName() {
         return imageName;
     }
@@ -38,39 +75,6 @@ public class Inventory{
     public void setPartCode(String partCode) {
         this.partCode = partCode;
     }
-
-    private String partCode;
-    private String partName;
-    private String brand;
-    private double price;
-    private int quantity;
-    private String category;
-    private String stockDate;
-    private String imageName;
-    private int threshold;
-
-    public Inventory(
-            String partCode,
-            String partName,
-            String brand,
-            double price,
-            int quantity,
-            int threshold,
-            String category,
-            String stockDate,
-            String imageName) {
-
-        this.partCode = partCode;
-        this.partName = partName;
-        this.brand = brand;
-        this.price = price;
-        this.quantity = quantity;
-        this.category = category;
-        this.stockDate = stockDate;
-        this.imageName = imageName;
-        this.threshold=threshold;
-    }
-
     public String getPartCode() {
         return partCode;
     }
