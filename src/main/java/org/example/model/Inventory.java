@@ -66,4 +66,8 @@ public class Inventory{
                 + stockDate + " | "
                 + imageName;
     }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
