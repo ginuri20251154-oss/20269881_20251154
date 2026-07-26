@@ -35,9 +35,10 @@ public class InventoryController {
             System.out.println("\n===== INVENTORY MENU =====");
             System.out.println("1. View Inventory");
             System.out.println("2. Search Inventory");
-            System.out.println("3. Random Dealer Selection");
-            System.out.println("4. Point of Sales");
-            System.out.println("5. Exit");
+            System.out.println("3. Low Stock Monitoring");
+            System.out.println("4. Random Dealer Selection");
+            System.out.println("5. Point of Sales");
+            System.out.println("6. Exit");
 
             System.out.print("Enter your choice: ");
 
@@ -54,18 +55,21 @@ public class InventoryController {
                 searchInventory(items);
             }
             else if (choice==3){
-                dealerController.displayRandomDealers();
+                displayLowStockItems(items);
             }
             else if (choice==4){
+                dealerController.displayRandomDealers();
+            }
+            else if (choice==5){
                 posController.processSale(items);
             }
-            else if (choice == 5) {
+            else if (choice == 6) {
                 System.out.println("Program closed.");}
                 else {
                 System.out.println("Invalid choice.");
             }
 
-        } while (choice != 5);
+        } while (choice != 6);
     }
 
     private void viewInventory(List<Inventory> items) {
@@ -139,5 +143,89 @@ public class InventoryController {
         for (Inventory item : results) {
             System.out.println(item);
         }
+    }
+    private void displayLowStockItems(List<Inventory> items) {
+
+        List<Inventory> lowStockItems =
+                inventoryService.getLowStockItems(items);
+
+        if (lowStockItems.isEmpty()) {
+            System.out.println("No low stock items found.");
+            return;
+        }
+
+        System.out.println("\n===== LOW STOCK ITEMS =====");
+
+        for (Inventory item : lowStockItems) {
+            System.out.println(item);
+        }
+    }
+    public String addPart(
+            List<Inventory> items,
+            String partCode,
+            String partName,
+            String brand,
+            double price,
+            int quantity,
+            String category,
+            String stockDate,
+            String imageName,
+            int lowStockThreshold) {
+
+        if (partCode == null || partCode.trim().isEmpty()) {
+            return "Part code is required.";
+        }
+
+        if (partName == null || partName.trim().isEmpty()) {
+            return "Part name is required.";
+        }
+
+        if (brand == null || brand.trim().isEmpty()) {
+            return "Brand is required.";
+        }
+
+        if (price < 0) {
+            return "Price cannot be negative.";
+        }
+
+        if (quantity < 0) {
+            return "Quantity cannot be negative.";
+        }
+
+        if (category == null || category.trim().isEmpty()) {
+            return "Category is required.";
+        }
+
+        if (lowStockThreshold < 0) {
+            return "Low-stock threshold cannot be negative.";
+        }
+
+        if (stockDate == null || stockDate.trim().isEmpty()) {
+            return "Stock date is required.";
+        }
+
+        if (imageName == null || imageName.trim().isEmpty()) {
+            imageName = "No Image";
+        }
+
+        Inventory newItem = new Inventory(
+                partCode.trim(),
+                partName.trim(),
+                brand.trim(),
+                price,
+                quantity,
+                category.trim(),
+                stockDate.trim(),
+                imageName.trim(),
+                lowStockThreshold
+        );
+
+        boolean added = inventoryService.addPart(items, newItem);
+
+        if (added) {
+            return "Part added successfully.";
+        }
+
+        return "A part with this part code already exists.";
     }
 }

@@ -194,7 +194,12 @@ public class InventoryService {
     }
     public List<Inventory> getLowStockItems( List<Inventory> items) {
 
-        List<Inventory> lowStockItems = new ArrayList<>();  for (Inventory item : items) {  if (item.getQuantity() < item.getThreshold()) {  lowStockItems.add(item); } }  return lowStockItems;
+        List<Inventory> lowStockItems = new ArrayList<>();
+        for (Inventory item : items) {
+            if (item.getQuantity() < item.getThreshold()) {
+                lowStockItems.add(item); }
+        }
+        return lowStockItems;
     }
     public boolean updateLowStockThreshold(
             List<Inventory> items,
@@ -216,5 +221,21 @@ public class InventoryService {
         }
 
         return false;
+    }
+    public boolean addPart(
+            List<Inventory> items,
+            Inventory newItem) {
+
+        for (Inventory item : items) {
+
+            if (item.getPartCode()
+                    .equalsIgnoreCase(newItem.getPartCode())) {
+
+                return false;
+            }
+        }
+
+        items.add(newItem);
+        return true;
     }
 }
