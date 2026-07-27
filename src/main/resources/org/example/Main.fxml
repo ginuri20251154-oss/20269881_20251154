@@ -101,7 +101,7 @@
                                       alignment="CENTER">
 
                                     <Button fx:id="addPartButton"
-                                            text="Add Part" />
+                                            text="Add Part" onAction="#handleAddPart" />
 
                                     <Button fx:id="updatePartButton"
                                             text="Update Part" />
