@@ -238,4 +238,47 @@ public class InventoryService {
         items.add(newItem);
         return true;
     }
+    public boolean deletePart( List<Inventory> items, String partCode) {
+
+        for (int i = 0; i < items.size(); i++) {
+            Inventory item = items.get(i);
+            if (item.getPartCode() .equalsIgnoreCase(partCode)) {
+                items.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean updatePart(
+            List<Inventory> items,
+            String partCode,
+            String partName,
+            String brand,
+            double price,
+            int quantity,
+            String category,
+            String stockDate,
+            String imageName,
+            int lowStockThreshold) {
+
+        for (Inventory item : items) {
+
+            if (item.getPartCode()
+                    .equalsIgnoreCase(partCode)) {
+
+                item.setPartName(partName);
+                item.setBrand(brand);
+                item.setPrice(price);
+                item.setQuantity(quantity);
+                item.setCategory(category);
+                item.setStockDate(stockDate);
+                item.setImageName(imageName);
+                item.setThreshold(lowStockThreshold);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

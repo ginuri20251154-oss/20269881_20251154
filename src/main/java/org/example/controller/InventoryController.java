@@ -228,4 +228,82 @@ public class InventoryController {
 
         return "A part with this part code already exists.";
     }
+    public String deletePart( List<Inventory> items, String partCode) {
+
+        if (partCode == null || partCode.trim().isEmpty()) {
+            return "Part code is required.";
+        }
+        boolean deleted = inventoryService.deletePart( items, partCode.trim() );
+        if (deleted) {
+            return "Part deleted successfully.";
+        }
+        return "Part not found.";
+    }
+    public String updatePart(
+            List<Inventory> items,
+            String partCode,
+            String partName,
+            String brand,
+            double price,
+            int quantity,
+            String category,
+            String stockDate,
+            String imageName,
+            int lowStockThreshold) {
+
+        if (partCode == null || partCode.trim().isEmpty()) {
+            return "Part code is required.";
+        }
+
+        if (partName == null || partName.trim().isEmpty()) {
+            return "Part name is required.";
+        }
+
+        if (brand == null || brand.trim().isEmpty()) {
+            return "Brand is required.";
+        }
+
+        if (price < 0) {
+            return "Price cannot be negative.";
+        }
+
+        if (quantity < 0) {
+            return "Quantity cannot be negative.";
+        }
+
+        if (category == null || category.trim().isEmpty()) {
+            return "Category is required.";
+        }
+
+        if (stockDate == null || stockDate.trim().isEmpty()) {
+            return "Stock date is required.";
+        }
+
+        if (lowStockThreshold < 0) {
+            return "Low-stock threshold cannot be negative.";
+        }
+
+        if (imageName == null || imageName.trim().isEmpty()) {
+            imageName = "No Image";
+        }
+
+        boolean updated = inventoryService.updatePart(
+                items,
+                partCode.trim(),
+                partName.trim(),
+                brand.trim(),
+                price,
+                quantity,
+                category.trim(),
+                stockDate.trim(),
+                imageName.trim(),
+                lowStockThreshold
+        );
+
+        if (updated) {
+            return "Part updated successfully.";
+        }
+
+        return "Part not found.";
+    }
 }
