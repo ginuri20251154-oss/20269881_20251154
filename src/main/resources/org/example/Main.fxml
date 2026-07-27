@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
+<?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.controller.MainFXController"
@@ -78,20 +79,39 @@
                         </center>
 
                         <bottom>
-                            <HBox spacing="10"
-                                  alignment="CENTER"
+                            <VBox spacing="10"
                                   style="-fx-padding: 15;">
 
-                                <Button fx:id="addPartButton"
-                                        text="Add Part" />
+                                <HBox spacing="20"
+                                      alignment="CENTER_LEFT">
 
-                                <Button fx:id="updatePartButton"
-                                        text="Update Part" />
+                                    <Label text="Total Parts:" />
 
-                                <Button fx:id="deletePartButton"
-                                        text="Delete Part" />
+                                    <Label fx:id="totalPartsLabel"
+                                           text="0" />
 
-                            </HBox>
+                                    <Label text="Total Inventory Value:" />
+
+                                    <Label fx:id="totalValueLabel"
+                                           text="0.00" />
+
+                                </HBox>
+
+                                <HBox spacing="10"
+                                      alignment="CENTER">
+
+                                    <Button fx:id="addPartButton"
+                                            text="Add Part" />
+
+                                    <Button fx:id="updatePartButton"
+                                            text="Update Part" />
+
+                                    <Button fx:id="deletePartButton"
+                                            text="Delete Part" />
+
+                                </HBox>
+
+                            </VBox>
                         </bottom>
 
                     </BorderPane>

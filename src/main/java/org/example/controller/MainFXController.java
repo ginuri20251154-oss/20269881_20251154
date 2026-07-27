@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -49,7 +50,9 @@ public class MainFXController {
 
     @FXML
     private Button deletePartButton;
+    @FXML private Label totalPartsLabel;
 
+    @FXML private Label totalValueLabel;
     private final InventoryService inventoryService =
             new InventoryService(
                     "src/main/java/org/example/InputFiles/inventory_legacy.txt"
@@ -112,10 +115,22 @@ public class MainFXController {
 
         inventoryTable.setItems(inventoryData);
 
+        updateInventorySummary();
         System.out.println(
                 "Inventory loaded into table: "
                         + inventoryData.size()
                         + " items"
         );
+
+    }
+    private void updateInventorySummary() {
+
+        int totalParts = inventoryData.size();
+        double totalValue = 0.0;
+        for (Inventory item : inventoryData) {
+            totalValue += item.getPrice() * item.getQuantity();
+        }
+        totalPartsLabel.setText( String.valueOf(totalParts) );
+        totalValueLabel.setText( String.format("Rs.%.2f", totalValue) );
     }
 }
