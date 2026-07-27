@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.controller.MainFXController"
+            prefWidth="1000"
+            prefHeight="650">
+
+    <top>
+        <Label text="Inventory Management System"
+               maxWidth="Infinity"
+               style="-fx-font-size: 22px;
+                      -fx-font-weight: bold;
+                      -fx-padding: 15;
+                      -fx-alignment: center;" />
+    </top>
+
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+
+            <tabs>
+
+                <!-- Inventory Tab -->
+                <Tab text="Inventory"
+                     closable="false">
+
+                    <BorderPane>
+
+                        <center>
+                            <TableView fx:id="inventoryTable">
+
+                                <columns>
+
+                                    <TableColumn fx:id="partCodeColumn"
+                                                 text="Part Code"
+                                                 prefWidth="100" />
+
+                                    <TableColumn fx:id="partNameColumn"
+                                                 text="Part Name"
+                                                 prefWidth="160" />
+
+                                    <TableColumn fx:id="brandColumn"
+                                                 text="Brand"
+                                                 prefWidth="120" />
+
+                                    <TableColumn fx:id="categoryColumn"
+                                                 text="Category"
+                                                 prefWidth="120" />
+
+                                    <TableColumn fx:id="priceColumn"
+                                                 text="Price"
+                                                 prefWidth="100" />
+
+                                    <TableColumn fx:id="quantityColumn"
+                                                 text="Quantity"
+                                                 prefWidth="100" />
+
+                                    <TableColumn fx:id="stockDateColumn"
+                                                 text="Stock Date"
+                                                 prefWidth="120" />
+
+                                    <TableColumn fx:id="thresholdColumn"
+                                                 text="Low Stock Threshold"
+                                                 prefWidth="150" />
+
+                                </columns>
+
+                            </TableView>
+                        </center>
+
+                        <bottom>
+                            <HBox spacing="10"
+                                  alignment="CENTER"
+                                  style="-fx-padding: 15;">
+
+                                <Button fx:id="addPartButton"
+                                        text="Add Part" />
+
+                                <Button fx:id="updatePartButton"
+                                        text="Update Part" />
+
+                                <Button fx:id="deletePartButton"
+                                        text="Delete Part" />
+
+                            </HBox>
+                        </bottom>
+
+                    </BorderPane>
+
+                </Tab>
+
+                <!-- Search Tab -->
+                <Tab text="Search"
+                     closable="false">
+
+                    <BorderPane>
+                        <center>
+                            <Label text="Search functionality will be added here." />
+                        </center>
+                    </BorderPane>
+
+                </Tab>
+
+                <!-- Low Stock Tab -->
+                <Tab text="Low Stock"
+                     closable="false">
+
+                    <BorderPane>
+                        <center>
+                            <Label text="Low-stock items will be displayed here." />
+                        </center>
+                    </BorderPane>
+
+                </Tab>
+
+                <!-- Dealers Tab -->
+                <Tab text="Dealers"
+                     closable="false">
+
+                    <BorderPane>
+                        <center>
+                            <Label text="Dealer information will be displayed here." />
+                        </center>
+                    </BorderPane>
+
+                </Tab>
+
+                <!-- Point of Sale Tab -->
+                <Tab text="Point Of Sale"
+                     closable="false">
+
+                    <BorderPane>
+                        <center>
+                            <Label text="Point-of-sale cart will be added here." />
+                        </center>
+                    </BorderPane>
+
+                </Tab>
+
+            </tabs>
+
+        </TabPane>
+    </center>
+
+</BorderPane>

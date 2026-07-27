@@ -2,6 +2,7 @@ package org.example.controller;
 
 import org.example.model.Cart;
 import org.example.model.Inventory;
+import org.example.service.AuditService;
 import org.example.service.POSService;
 
 import java.util.ArrayList;
@@ -10,14 +11,18 @@ import java.util.Scanner;
 
 public class POSController {
     private final POSService posService;
+    private final AuditService auditService;
     private final Scanner scanner;
 
     public POSController(
             POSService posService,
+            AuditService auditService,
             Scanner scanner) {
 
         this.posService = posService;
+        this.auditService=auditService;
         this.scanner = scanner;
+
     }
 
     public void processSale(List<Inventory> inventoryItems) {
@@ -253,6 +258,11 @@ public class POSController {
                     cartItem.getPurchaseQuantity()
             );
         }
+        auditService.writeLog(
+                "SALE",
+                "Sale completed. Final total: $"
+                        + String.format("%.2f", finalTotal)
+        );
 
         System.out.println(
                 "Sale completed successfully."
