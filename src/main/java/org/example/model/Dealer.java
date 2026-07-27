@@ -25,6 +25,35 @@ public class Dealer {
         return location;
     }
 
+    public String getDealerCode() {
+
+        return dealerCode;
+    }
+
+    public void setDealerCode(String dealerCode) {
+        this.dealerCode = dealerCode;
+    }
+
+    public String getDealerName() {
+        return dealerName;
+    }
+
+    public void setDealerName(String dealerName) {
+        this.dealerName = dealerName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return dealerCode + " | "

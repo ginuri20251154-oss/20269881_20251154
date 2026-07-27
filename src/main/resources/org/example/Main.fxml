@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.controller.MainFXController"
@@ -104,10 +105,10 @@
                                             text="Add Part" onAction="#handleAddPart" />
 
                                     <Button fx:id="updatePartButton"
-                                            text="Update Part" />
+                                            text="Update Part" onAction="#handleUpdatePart"  />
 
                                     <Button fx:id="deletePartButton"
-                                            text="Delete Part" />
+                                            text="Delete Part" onAction="#handleDeletePart" />
 
                                 </HBox>
 
@@ -120,36 +121,187 @@
 
                 <!-- Search Tab -->
                 <Tab text="Search"
-                     closable="false">
+                      closable="false">
 
-                    <BorderPane>
-                        <center>
-                            <Label text="Search functionality will be added here." />
-                        </center>
-                    </BorderPane>
+                <BorderPane>
 
-                </Tab>
+                    <top>
+                        <VBox spacing="10"
+                              style="-fx-padding: 15;">
 
+                            <Label text="Search Inventory"
+                                   style="-fx-font-size: 18px;
+                              -fx-font-weight: bold;" />
+
+                            <HBox spacing="10">
+
+                                <TextField fx:id="searchPartCodeField"
+                                           promptText="Part Code" />
+
+                                <TextField fx:id="searchPartNameField"
+                                           promptText="Part Name" />
+
+                                <TextField fx:id="searchBrandField"
+                                           promptText="Brand" />
+
+                                <TextField fx:id="searchCategoryField"
+                                           promptText="Category" />
+
+                            </HBox>
+
+                            <HBox spacing="10">
+
+                                <TextField fx:id="searchMinPriceField"
+                                           promptText="Minimum Price" />
+
+                                <TextField fx:id="searchMaxPriceField"
+                                           promptText="Maximum Price" />
+
+                                <Button text="Search"
+                                        onAction="#handleSearchInventory" />
+
+                                <Button text="Reset"
+                                        onAction="#handleResetSearch" />
+
+                            </HBox>
+
+                        </VBox>
+                    </top>
+
+                    <center>
+                        <TableView fx:id="searchResultsTable">
+
+                            <columns>
+
+                                <TableColumn fx:id="searchPartCodeColumn"
+                                             text="Part Code"
+                                             prefWidth="100" />
+
+                                <TableColumn fx:id="searchPartNameColumn"
+                                             text="Part Name"
+                                             prefWidth="160" />
+
+                                <TableColumn fx:id="searchBrandColumn"
+                                             text="Brand"
+                                             prefWidth="120" />
+
+                                <TableColumn fx:id="searchCategoryColumn"
+                                             text="Category"
+                                             prefWidth="120" />
+
+                                <TableColumn fx:id="searchPriceColumn"
+                                             text="Price"
+                                             prefWidth="100" />
+
+                                <TableColumn fx:id="searchQuantityColumn"
+                                             text="Quantity"
+                                             prefWidth="100" />
+
+                            </columns>
+
+                        </TableView>
+                    </center>
+
+                </BorderPane>
+
+            </Tab>
                 <!-- Low Stock Tab -->
-                <Tab text="Low Stock"
-                     closable="false">
+                <Tab text="Low Stock" closable="false">
 
                     <BorderPane>
+
+                        <top>
+                            <HBox spacing="10"
+                                  style="-fx-padding: 15;">
+
+                                <Label text="Low Stock Items"
+                                       style="-fx-font-size: 18px;
+                              -fx-font-weight: bold;" />
+
+                                <Button text="Refresh"
+                                        onAction="#handleRefreshLowStock" />
+
+                            </HBox>
+                        </top>
+
                         <center>
-                            <Label text="Low-stock items will be displayed here." />
+                            <TableView fx:id="lowStockTable">
+
+                                <columns>
+
+                                    <TableColumn fx:id="lowStockPartCodeColumn"
+                                                 text="Part Code"
+                                                 prefWidth="100" />
+
+                                    <TableColumn fx:id="lowStockPartNameColumn"
+                                                 text="Part Name"
+                                                 prefWidth="160" />
+
+                                    <TableColumn fx:id="lowStockBrandColumn"
+                                                 text="Brand"
+                                                 prefWidth="120" />
+
+                                    <TableColumn fx:id="lowStockCategoryColumn"
+                                                 text="Category"
+                                                 prefWidth="120" />
+
+                                    <TableColumn fx:id="lowStockQuantityColumn"
+                                                 text="Quantity"
+                                                 prefWidth="100" />
+
+                                    <TableColumn fx:id="lowStockThresholdColumn"
+                                                 text="Threshold"
+                                                 prefWidth="110" />
+
+                                </columns>
+
+                            </TableView>
                         </center>
+
                     </BorderPane>
 
                 </Tab>
-
                 <!-- Dealers Tab -->
-                <Tab text="Dealers"
-                     closable="false">
+                <Tab text="Dealers" closable="false">
 
                     <BorderPane>
+
+                        <top>
+                            <HBox spacing="10"
+                                  style="-fx-padding: 15;">
+
+                                <Label text="Random Dealer Selection"
+                                       style="-fx-font-size: 18px;
+                              -fx-font-weight: bold;" />
+
+                                <Button text="Select Dealers"
+                                        onAction="#handleSelectDealers" />
+
+                            </HBox>
+                        </top>
+
                         <center>
-                            <Label text="Dealer information will be displayed here." />
+                            <TableView fx:id="dealerTable">
+
+                                <columns>
+
+                                    <TableColumn fx:id="dealerNameColumn"
+                                                 text="Dealer Name"
+                                                 prefWidth="220" />
+
+                                    <TableColumn fx:id="dealerLocationColumn"
+                                                 text="Location"
+                                                 prefWidth="180" />
+
+                                    <TableColumn fx:id="dealerPhoneColumn"
+                                                 text="Phone Number"
+                                                 prefWidth="180" />
+
+                                </columns>
+
+                            </TableView>
                         </center>
+
                     </BorderPane>
 
                 </Tab>
