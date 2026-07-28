@@ -8,4 +8,3 @@ P009,Ignition Coil 2-Stroke,Bajaj,2200.0,18,Electrical,2023-09-01,No Image
 P001,Bajaj 4-Stroke Piston,Bajaj,4500.0,15,Engine,2023-10-12,piston4s.jpg
 P005,Clutch Cable Bajaj RE,Bajaj,950.0,12,Engine,01-02-2024,cl_cable.jpg
 P008,Piaggio Ape Filter,Piaggio,1100.0,0,Engine,2024-02-28,filter_ape.jpeg
-P012,box,box,200.0,3,fw,2026-07-06,
