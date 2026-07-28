@@ -9,13 +9,17 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import org.example.model.Cart;
 import org.example.model.Dealer;
 import org.example.model.Inventory;
 import org.example.service.DealerService;
 import org.example.service.InventoryService;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +107,9 @@ public class MainFXController {
     private TableColumn<Inventory, Integer> thresholdColumn;
 
     @FXML
+    private TableColumn<Inventory, String> imageColumn;
+
+    @FXML
     private Button addPartButton;
 
     @FXML
@@ -160,6 +167,9 @@ public class MainFXController {
 
     @FXML
     private TableColumn<Inventory, Integer> searchQuantityColumn;
+
+    @FXML
+    private TableColumn<Inventory, String> searchImageColumn;
     private ObservableList<Inventory> inventoryData;
 
     @FXML
@@ -206,6 +216,12 @@ public class MainFXController {
                         "Threshold"
                 )
         );
+
+        imageColumn.setCellValueFactory(
+                new PropertyValueFactory<>("imageName")
+        );
+        imageColumn.setCellFactory(column -> createImageCell());
+
         searchPartCodeColumn.setCellValueFactory(
                 new PropertyValueFactory<>("partCode")
         );
@@ -229,6 +245,12 @@ public class MainFXController {
         searchQuantityColumn.setCellValueFactory(
                 new PropertyValueFactory<>("quantity")
         );
+
+        searchImageColumn.setCellValueFactory(
+                new PropertyValueFactory<>("imageName")
+        );
+        searchImageColumn.setCellFactory(column -> createImageCell());
+
         lowStockPartCodeColumn.setCellValueFactory(
                 new PropertyValueFactory<>("partCode")
         );
@@ -308,6 +330,53 @@ public class MainFXController {
         cartTable.setItems(cartData);
     }
 
+    private TableCell<Inventory, String> createImageCell() {
+        return new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            protected void updateItem(String imageName, boolean empty) {
+                super.updateItem(imageName, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+
+                String fileName = imageName;
+
+                if (fileName == null || fileName.isBlank()
+                        || fileName.equalsIgnoreCase("No Image")) {
+                    fileName = "no image.jpg";
+                }
+
+                File file = new File(fileName);
+
+                if (!file.exists()) {
+                    file = new File(
+                            "src/main/java/org/example/InputFiles/" + fileName
+                    );
+                }
+
+                if (!file.exists()) {
+                    file = new File(
+                            "src/main/java/org/example/InputFiles/no image.jpg"
+                    );
+                }
+
+                if (file.exists()) {
+                    imageView.setImage(new Image(file.toURI().toString()));
+                    imageView.setFitWidth(60);
+                    imageView.setFitHeight(60);
+                    imageView.setPreserveRatio(true);
+                    setGraphic(imageView);
+                } else {
+                    setGraphic(null);
+                }
+            }
+        };
+    }
+
     private void loadInventoryData() {
 
         List<Inventory> items =
@@ -366,6 +435,16 @@ public class MainFXController {
         TextField thresholdField = new TextField();
         DatePicker stockDatePicker = new DatePicker();
 
+        Label imageLabel = new Label("No image selected");
+        Button chooseImageButton = new Button("Choose Image");
+
+        chooseImageButton.setOnAction(e -> {
+            File file = new FileChooser().showOpenDialog(dialog.getOwner());
+            if (file != null) {
+                imageLabel.setText(file.getAbsolutePath());
+            }
+        });
+
         GridPane grid = new GridPane();
 
         grid.setHgap(10);
@@ -395,6 +474,10 @@ public class MainFXController {
 
         grid.add(new Label("Low Stock Threshold:"), 0, 7);
         grid.add(thresholdField, 1, 7);
+
+        grid.add(new Label("Image:"), 0, 8);
+        grid.add(chooseImageButton, 1, 8);
+        grid.add(imageLabel, 2, 8);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -492,6 +575,11 @@ public class MainFXController {
 
                 String stockDate = stockDatePicker.getValue().toString();
 
+                String imageName =
+                        imageLabel.getText().equals("No image selected")
+                                ? ""
+                                : imageLabel.getText();
+
                 Inventory newPart = new Inventory(
                         partCode,
                         partName,
@@ -500,7 +588,7 @@ public class MainFXController {
                         quantity,
                         category,
                         stockDate,
-                        "",
+                        imageName,
                         threshold
                 );
 

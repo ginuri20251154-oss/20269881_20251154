@@ -73,6 +73,9 @@
                                     <TableColumn fx:id="thresholdColumn"
                                                  text="Low Stock Threshold"
                                                  prefWidth="150" />
+                                    <TableColumn fx:id="imageColumn"
+                                                 text="Image"
+                                                 prefWidth="90" />
 
                                 </columns>
 
@@ -196,6 +199,9 @@
                                 <TableColumn fx:id="searchQuantityColumn"
                                              text="Quantity"
                                              prefWidth="100" />
+                                <TableColumn fx:id="searchImageColumn"
+                                             text="Image"
+                                             prefWidth="90" />
 
                             </columns>
 
@@ -405,5 +411,6 @@
 
         </TabPane>
     </center>
+
 
 </BorderPane>
