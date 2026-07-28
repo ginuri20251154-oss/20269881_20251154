@@ -1,1 +1,4 @@
 2026-07-27 08:18:16 | SALE | Sale completed. Final total: $9000.00
+2026-07-28 13:21:48 | ADD | Part P024 added. Quantity: 3
+2026-07-28 13:22:48 | ADD | Part P011 added. Quantity: 2
+2026-07-28 13:25:51 | ADD | Part P012 added. Quantity: 3

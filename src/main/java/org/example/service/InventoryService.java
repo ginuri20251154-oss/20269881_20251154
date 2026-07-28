@@ -1,8 +1,9 @@
 package org.example.service;
 
+import javafx.collections.ObservableList;
 import org.example.model.Inventory;
-import java.io.BufferedReader;
-import java.io.FileReader;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -283,5 +284,34 @@ public class InventoryService {
         }
 
         return false;
+    }
+
+    public void saveInventory(List<Inventory> items) {
+
+        try (BufferedWriter writer =
+                     new BufferedWriter(new FileWriter(fileName))) {
+
+            for (Inventory item : items) {
+
+                String line =
+                        item.getPartCode() + ","
+                                + item.getPartName() + ","
+                                + item.getBrand() + ","
+                                + item.getPrice() + ","
+                                + item.getQuantity() + ","
+                                + item.getCategory() + ","
+                                + item.getStockDate() + ","
+                                + item.getImageName();
+
+                writer.write(line);
+                writer.newLine();
+            }
+
+        } catch (IOException e) {
+
+            System.out.println(
+                    "Could not save inventory file: " + e.getMessage()
+            );
+        }
     }
 }

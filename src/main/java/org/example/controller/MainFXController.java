@@ -16,6 +16,7 @@ import javafx.stage.FileChooser;
 import org.example.model.Cart;
 import org.example.model.Dealer;
 import org.example.model.Inventory;
+import org.example.service.AuditService;
 import org.example.service.DealerService;
 import org.example.service.InventoryService;
 
@@ -142,6 +143,7 @@ public class MainFXController {
             new InventoryService(
                     "src/main/java/org/example/InputFiles/inventory_legacy.txt"
             );
+    private final AuditService auditService = new AuditService();
 
     private final DealerService dealerService =
             new DealerService(
@@ -600,6 +602,13 @@ public class MainFXController {
                 }
 
                 inventoryTable.refresh();
+                inventoryService.saveInventory(inventoryData);
+
+                auditService.writeLog(
+                        "ADD",
+                        "Part " + newPart.getPartCode() + " added. Quantity: " + newPart.getQuantity()
+                );
+
                 updateInventorySummary();
                 showSuccess("Part added successfully.");
             }
@@ -681,6 +690,13 @@ public class MainFXController {
                         );
 
                         inventoryTable.refresh();
+
+                        inventoryService.saveInventory(inventoryData);
+
+                        auditService.writeLog(
+                                "DELETE",
+                                "Part " + selectedPart.getPartCode() + " deleted."
+                        );
 
                         updateInventorySummary();
 
@@ -980,6 +996,13 @@ public class MainFXController {
                         );
 
                         inventoryTable.refresh();
+
+                        inventoryService.saveInventory(inventoryData);
+
+                        auditService.writeLog(
+                                "UPDATE",
+                                "Part " + selectedPart.getPartCode() + " updated. New quantity: " + selectedPart.getQuantity()
+                        );
 
                         updateInventorySummary();
 
@@ -1481,10 +1504,17 @@ public class MainFXController {
             inventoryItem.setQuantity(
                     updatedQuantity
             );
+
+            auditService.writeLog(
+                    "SALE",
+                    "Part " + inventoryItem.getPartCode() + " sold. Quantity: " + cartItem.getPurchaseQuantity()
+            );
         }
 
         inventoryTable.refresh();
         searchResultsTable.refresh();
+
+        inventoryService.saveInventory(inventoryData);
 
         loadLowStockItems();
 
