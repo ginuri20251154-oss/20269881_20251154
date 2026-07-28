@@ -1,31 +1,70 @@
-# Malabe Tuk-Tuk & Three-Wheeler Spares Depot
+# Inventory & Point of Sale (POS) Management System
 
-A small local spare-parts business that manages inventory and dealer
-information using legacy text files
+A JavaFX desktop application for managing inventory, tracking dealers, and processing sales transactions with audit logging.
+
 ---
 
 ## Features
 
-* **Add, Delete and Update Parts** items can be added,updated and deleted from the inventory. To update or delete an item, first click on the desired item and then press the button.
-* **Search Inventory** Search can be implemented using various fields 
-* **Low Stock Monitoring** Each item can be given a unique threshold value against which the stock will be monitored and items in low stock will be displayed.
+* **Inventory Management:** View, add, update, and manage stock items.
+* **Point of Sale (POS):** Process sales orders and manage a live shopping cart.
+* **Dealer Management:** Track supplier/dealer details and legacy data.
+* **Audit Trail:** Automatic system event logging via `AuditService` (`audit_log.txt`).
+* **Graphical User Interface:** Interactive UI built with JavaFX (`Main.fxml`).
 
 ---
 
-## Prerequisites
+## Project Structure
 
-Before building or running the project, make sure you have the following installed:
+```text
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── org/
+│   │   │       └── example/
+│   │   │           ├── controller/
+│   │   │           │   ├── DealerController.java
+│   │   │           │   ├── InventoryController.java
+│   │   │           │   ├── MainFXController.java
+│   │   │           │   └── POSController.java
+│   │   │           ├── InputFiles/
+│   │   │           │   ├── dealers_legacy.txt
+│   │   │           │   ├── inventory_legacy.txt
+│   │   │           │   └── [image assets]
+│   │   │           ├── model/
+│   │   │           │   ├── Cart.java
+│   │   │           │   ├── Dealer.java
+│   │   │           │   └── Inventory.java
+│   │   │           ├── repository/
+│   │   │           │   ├── DealerFileRepository.java
+│   │   │           │   └── InventoryFileRepository.java
+│   │   │           ├── service/
+│   │   │           │   ├── AuditService.java
+│   │   │           │   ├── DealerService.java
+│   │   │           │   ├── InventoryService.java
+│   │   │           │   └── POSService.java
+│   │   │           ├── InventoryApplication.java
+│   │   │           └── Main.java
+│   │   └── resources/
+│   │       └── org/
+│   │           └── example/
+│   │               └── Main.fxml
+│   └── test/
+│       └── java/
+│           ├── InventoryServiceTest.java
+│           └── POSServiceTest.java
+├── audit_log.txt
+├── pom.xml
+└── README.m
 
-* **Java JDK:** 17 or higher
-* **Apache Maven:** 3.8+ (or use the included `./mvnw` wrapper)
-* **Git**
 
----
 
-## Getting Started
 
-### 1. Clone the Repository
 
-```bash
-git clone [https://github.com/ginuri20251154-oss/20269881_20251154](https://github.com/ginuri20251154-oss/20269881_20251154)
-cd 20269881_20251154
+
+
+
+
+
+
+
