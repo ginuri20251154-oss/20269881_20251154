@@ -1,5 +1,8 @@
 package org.example.controller;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -7,14 +10,40 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import org.example.model.Cart;
 import org.example.model.Dealer;
 import org.example.model.Inventory;
 import org.example.service.DealerService;
 import org.example.service.InventoryService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainFXController {
+    @FXML
+    private TextField posPartCodeField;
+
+    @FXML
+    private TextField posQuantityField;
+    @FXML
+    private TableView<Cart> cartTable;
+    @FXML
+    private TableColumn<Cart, String> cartPartCodeColumn;
+
+    @FXML
+    private TableColumn<Cart, String> cartPartNameColumn;
+
+    @FXML
+    private TableColumn<Cart, Integer> cartQuantityColumn;
+
+    @FXML
+    private TableColumn<Cart, Double> cartPriceColumn;
+
+    @FXML
+    private TableColumn<Cart, Double> cartSubtotalColumn;
+    @FXML
+    private Label cartTotalLabel;
     @FXML
     private TableView<Dealer> dealerTable;
 
@@ -140,6 +169,7 @@ public class MainFXController {
 
         loadInventoryData();
     }
+    private ObservableList<Cart> cartData = FXCollections.observableArrayList();
 
     private void configureTableColumns() {
 
@@ -173,7 +203,7 @@ public class MainFXController {
 
         thresholdColumn.setCellValueFactory(
                 new PropertyValueFactory<>(
-                        "lowStockThreshold"
+                        "Threshold"
                 )
         );
         searchPartCodeColumn.setCellValueFactory(
@@ -220,7 +250,7 @@ public class MainFXController {
         );
 
         lowStockThresholdColumn.setCellValueFactory(
-                new PropertyValueFactory<>("lowStockThreshold")
+                new PropertyValueFactory<>("Threshold")
         );
         dealerNameColumn.setCellValueFactory(
                 new PropertyValueFactory<>("dealerName")
@@ -233,6 +263,49 @@ public class MainFXController {
         dealerPhoneColumn.setCellValueFactory(
                 new PropertyValueFactory<>("phoneNumber")
         );
+        cartPartCodeColumn.setCellValueFactory(
+                cellData ->
+                        new SimpleStringProperty(
+                                cellData.getValue()
+                                        .getInventoryItem()
+                                        .getPartCode()
+                        )
+        );
+
+        cartPartNameColumn.setCellValueFactory(
+                cellData ->
+                        new SimpleStringProperty(
+                                cellData.getValue()
+                                        .getInventoryItem()
+                                        .getPartName()
+                        )
+        );
+
+        cartQuantityColumn.setCellValueFactory(
+                cellData ->
+                        new SimpleIntegerProperty(
+                                cellData.getValue()
+                                        .getPurchaseQuantity()
+                        ).asObject()
+        );
+
+        cartPriceColumn.setCellValueFactory(
+                cellData ->
+                        new SimpleDoubleProperty(
+                                cellData.getValue()
+                                        .getInventoryItem()
+                                        .getPrice()
+                        ).asObject()
+        );
+
+        cartSubtotalColumn.setCellValueFactory(
+                cellData ->
+                        new SimpleDoubleProperty(
+                                cellData.getValue()
+                                        .getDiscountedSubtotal()
+                        ).asObject()
+        );
+        cartTable.setItems(cartData);
     }
 
     private void loadInventoryData() {
@@ -327,7 +400,6 @@ public class MainFXController {
 
         dialog.showAndWait().ifPresent(buttonType -> {
 
-
             if (buttonType == addButtonType) {
 
                 String partCode = partCodeField.getText().trim();
@@ -338,64 +410,110 @@ public class MainFXController {
                 String quantityText = quantityField.getText().trim();
                 String thresholdText = thresholdField.getText().trim();
 
-                if (partCode.isEmpty()
-                        || partName.isEmpty()
-                        || brand.isEmpty()
-                        || category.isEmpty()
-                        || priceText.isEmpty()
-                        || quantityText.isEmpty()
-                        || thresholdText.isEmpty()
-                        || stockDatePicker.getValue() == null) {
+                List<String> errors = new ArrayList<>();
 
-                    showError("Please complete all fields.");
+                if (partCode.isEmpty()) {
+                    errors.add("Part code is required.");
+                } else if (!isValidPartCode(partCode)) {
+                    errors.add(
+                            "Invalid part code. Expected format: one letter followed by "
+                                    + "3 digits, e.g. P001."
+                    );
+                }
+
+                if (partName.isEmpty()) {
+                    errors.add("Part name is required.");
+                }
+
+                if (brand.isEmpty()) {
+                    errors.add("Brand is required.");
+                }
+
+                if (category.isEmpty()) {
+                    errors.add("Category is required.");
+                } else if (!category.matches("^[A-Za-z ]+$")) {
+                    errors.add("Category must contain letters only (no numbers or symbols).");
+                }
+
+                Double price = null;
+                if (priceText.isEmpty()) {
+                    errors.add("Price is required.");
+                } else {
+                    try {
+                        price = Double.parseDouble(priceText);
+                        if (price < 0) {
+                            errors.add("Price cannot be negative.");
+                        }
+                    } catch (NumberFormatException e) {
+                        errors.add("Price must be a valid number, e.g. 850.00.");
+                    }
+                }
+
+                Integer quantity = null;
+                if (quantityText.isEmpty()) {
+                    errors.add("Quantity is required.");
+                } else {
+                    try {
+                        quantity = Integer.parseInt(quantityText);
+                        if (quantity < 0) {
+                            errors.add("Quantity cannot be negative.");
+                        }
+                    } catch (NumberFormatException e) {
+                        errors.add("Quantity must be a whole number, e.g. 12.");
+                    }
+                }
+
+                Integer threshold = null;
+                if (thresholdText.isEmpty()) {
+                    errors.add("Low stock threshold is required.");
+                } else {
+                    try {
+                        threshold = Integer.parseInt(thresholdText);
+                        if (threshold < 0) {
+                            errors.add("Low stock threshold cannot be negative.");
+                        }
+                    } catch (NumberFormatException e) {
+                        errors.add("Low stock threshold must be a whole number, e.g. 5.");
+                    }
+                }
+
+                if (stockDatePicker.getValue() == null) {
+                    errors.add("Stock date is required.");
+                } else if (stockDatePicker.getValue().isAfter(LocalDate.now())) {
+                    errors.add("Stock date cannot be in the future.");
+                } else if (stockDatePicker.getValue().isBefore(LocalDate.of(2000, 1, 1))) {
+                    errors.add("Stock date cannot be before the year 2000.");
+                }
+
+                if (!errors.isEmpty()) {
+                    showErrors(errors);
                     return;
                 }
 
-                try {
+                String stockDate = stockDatePicker.getValue().toString();
 
-                    double price = Double.parseDouble(priceText);
-                    int quantity = Integer.parseInt(quantityText);
-                    int threshold = Integer.parseInt(thresholdText);
+                Inventory newPart = new Inventory(
+                        partCode,
+                        partName,
+                        brand,
+                        price,
+                        quantity,
+                        category,
+                        stockDate,
+                        "",
+                        threshold
+                );
 
-                    if (price < 0 || quantity < 0 || threshold < 0) {
+                boolean added = inventoryService.addPart(inventoryData, newPart);
 
-                        showError(
-                                "Price, quantity, and threshold cannot be negative."
-                        );
-
-                        return;
-                    }
-
-                    String stockDate =
-                            stockDatePicker.getValue().toString();
-
-                    Inventory newPart = new Inventory(
-                            partCode,
-                            partName,
-                            brand,
-                            price,
-                            quantity,
-                            category,
-                            stockDate,
-                            "",
-                            threshold
-                    );
-
-                    inventoryData.add(newPart);
-
-                    inventoryTable.refresh();
-
-                    updateInventorySummary();
-
-                    showSuccess("Part added successfully.");
-
-                } catch (NumberFormatException e) {
-
-                    showError(
-                            "Price must be a valid number. "
-                                    + "Quantity and threshold must be whole numbers."
-                    );
+                if (!added) {
+                    showError("A part with this part code already exists.");
+                    return;
                 }
+
+                inventoryTable.refresh();
+                updateInventorySummary();
+                showSuccess("Part added successfully.");
             }
         });
     }
@@ -410,6 +528,16 @@ public class MainFXController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    private void showErrors(List<String> errors) {
+
+        StringBuilder message = new StringBuilder();
+
+        for (String error : errors) {
+            message.append("\u2022 ").append(error).append("\n");
+        }
+
+        showError(message.toString().trim());
+    }
     private void showSuccess(String message) {
 
         Alert alert = new Alert( Alert.AlertType.INFORMATION );
@@ -417,6 +545,9 @@ public class MainFXController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    private boolean isValidPartCode(String partCode) {
+        return partCode.matches("^[A-Za-z]\\d{3}$");
     }
     @FXML
     private void handleDeletePart() {
@@ -673,86 +804,100 @@ public class MainFXController {
                                         .getText()
                                         .trim();
 
-                        if (partName.isEmpty()
-                                || brand.isEmpty()
-                                || category.isEmpty()
-                                || priceText.isEmpty()
-                                || quantityText.isEmpty()
-                                || thresholdText.isEmpty()) {
+                        List<String> errors = new ArrayList<>();
 
-                            showError(
-                                    "Please complete all fields."
-                            );
+                        if (partName.isEmpty()) {
+                            errors.add("Part name is required.");
+                        }
 
+                        if (brand.isEmpty()) {
+                            errors.add("Brand is required.");
+                        }
+
+                        if (category.isEmpty()) {
+                            errors.add("Category is required.");
+                        } else if (!category.matches("^[A-Za-z ]+$")) {
+                            errors.add("Category must contain letters only (no numbers or symbols).");
+                        }
+
+                        Double price = null;
+                        if (priceText.isEmpty()) {
+                            errors.add("Price is required.");
+                        } else {
+                            try {
+                                price = Double.parseDouble(priceText);
+                                if (price < 0) {
+                                    errors.add("Price cannot be negative.");
+                                }
+                            } catch (NumberFormatException e) {
+                                errors.add("Price must be a valid number, e.g. 850.00.");
+                            }
+                        }
+
+                        Integer quantity = null;
+                        if (quantityText.isEmpty()) {
+                            errors.add("Quantity is required.");
+                        } else {
+                            try {
+                                quantity = Integer.parseInt(quantityText);
+                                if (quantity < 0) {
+                                    errors.add("Quantity cannot be negative.");
+                                }
+                            } catch (NumberFormatException e) {
+                                errors.add("Quantity must be a whole number, e.g. 12.");
+                            }
+                        }
+
+                        Integer threshold = null;
+                        if (thresholdText.isEmpty()) {
+                            errors.add("Low stock threshold is required.");
+                        } else {
+                            try {
+                                threshold = Integer.parseInt(thresholdText);
+                                if (threshold < 0) {
+                                    errors.add("Low stock threshold cannot be negative.");
+                                }
+                            } catch (NumberFormatException e) {
+                                errors.add("Low stock threshold must be a whole number, e.g. 5.");
+                            }
+                        }
+
+                        if (!errors.isEmpty()) {
+                            showErrors(errors);
                             return;
                         }
 
-                        try {
+                        selectedPart.setPartName(
+                                partName
+                        );
 
-                            double price =
-                                    Double.parseDouble(
-                                            priceText
-                                    );
+                        selectedPart.setBrand(
+                                brand
+                        );
 
-                            int quantity =
-                                    Integer.parseInt(
-                                            quantityText
-                                    );
+                        selectedPart.setCategory(
+                                category
+                        );
 
-                            int threshold =
-                                    Integer.parseInt(
-                                            thresholdText
-                                    );
+                        selectedPart.setPrice(
+                                price
+                        );
 
-                            if (price < 0
-                                    || quantity < 0
-                                    || threshold < 0) {
+                        selectedPart.setQuantity(
+                                quantity
+                        );
 
-                                showError(
-                                        "Price, quantity, and threshold cannot be negative."
-                                );
+                        selectedPart.setThreshold(
+                                threshold
+                        );
 
-                                return;
-                            }
+                        inventoryTable.refresh();
 
-                            selectedPart.setPartName(
-                                    partName
-                            );
+                        updateInventorySummary();
 
-                            selectedPart.setBrand(
-                                    brand
-                            );
-
-                            selectedPart.setCategory(
-                                    category
-                            );
-
-                            selectedPart.setPrice(
-                                    price
-                            );
-
-                            selectedPart.setQuantity(
-                                    quantity
-                            );
-
-                            selectedPart.setThreshold(
-                                    threshold
-                            );
-
-                            inventoryTable.refresh();
-
-                            updateInventorySummary();
-
-                            showSuccess(
-                                    "Part updated successfully."
-                            );
-
-                        } catch (NumberFormatException e) {
-
-                            showError(
-                                    "Price must be a valid number. Quantity and threshold must be whole numbers."
-                            );
-                        }
+                        showSuccess(
+                                "Part updated successfully."
+                        );
                     }
                 });
     }
@@ -932,5 +1077,351 @@ public class MainFXController {
                     "No dealers were available."
             );
         }
+    }
+    @FXML
+    private void handleAddToCart() {
+
+        String partCode =
+                posPartCodeField
+                        .getText()
+                        .trim();
+
+        String quantityText =
+                posQuantityField
+                        .getText()
+                        .trim();
+
+        if (partCode.isEmpty() || quantityText.isEmpty()) {
+            showError(
+                    "Please enter both part code and quantity."
+            );
+            return;
+        }
+
+        int purchaseQuantity;
+
+        try {
+            purchaseQuantity =
+                    Integer.parseInt(quantityText);
+
+            if (purchaseQuantity <= 0) {
+                showError(
+                        "Quantity must be greater than zero."
+                );
+                return;
+            }
+
+        } catch (NumberFormatException exception) {
+            showError(
+                    "Quantity must be a whole number."
+            );
+            return;
+        }
+
+        Inventory selectedItem = null;
+
+        for (Inventory item : inventoryData) {
+
+            if (item.getPartCode()
+                    .equalsIgnoreCase(partCode)) {
+
+                selectedItem = item;
+                break;
+            }
+        }
+
+        if (selectedItem == null) {
+            showError(
+                    "No inventory item was found for part code: "
+                            + partCode
+            );
+            return;
+        }
+
+        if (purchaseQuantity
+                > selectedItem.getQuantity()) {
+
+            showError(
+                    "Insufficient stock. Available quantity: "
+                            + selectedItem.getQuantity()
+            );
+            return;
+        }
+
+        double subtotal =
+                selectedItem.getPrice()
+                        * purchaseQuantity;
+
+        if (purchaseQuantity >= 3) {
+            subtotal = subtotal * 0.95;
+        }
+
+        Cart cartItem =
+                new Cart(
+                        selectedItem,
+                        purchaseQuantity,
+                        subtotal
+                );
+
+        Cart existingCartItem = null;
+
+        for (Cart item : cartData) {
+
+            if (item.getInventoryItem()
+                    .getPartCode()
+                    .equalsIgnoreCase(partCode)) {
+
+                existingCartItem = item;
+                break;
+            }
+        }
+
+        if (existingCartItem != null) {
+
+            int updatedQuantity =
+                    existingCartItem.getPurchaseQuantity()
+                            + purchaseQuantity;
+
+            if (updatedQuantity > selectedItem.getQuantity()) {
+
+                showError(
+                        "Insufficient stock. Available quantity: "
+                                + selectedItem.getQuantity()
+                );
+                return;
+            }
+
+            double updatedSubtotal =
+                    selectedItem.getPrice()
+                            * updatedQuantity;
+
+            if (updatedQuantity >= 3) {
+                updatedSubtotal =
+                        updatedSubtotal * 0.95;
+            }
+
+            existingCartItem.setPurchaseQuantity(
+                    updatedQuantity
+            );
+
+            existingCartItem.setDiscountedSubtotal(
+                    updatedSubtotal
+            );
+
+            cartTable.refresh();
+
+        } else {
+
+            cartData.add(cartItem);
+        }
+
+        updateCartTotal();
+
+        posPartCodeField.clear();
+        posQuantityField.clear();
+    }
+    private void updateCartTotal() {
+
+        double total = 0;
+
+        for (Cart cartItem : cartData) {
+            total += cartItem.getDiscountedSubtotal();
+        }
+
+        cartTotalLabel.setText(
+                String.format("$%.2f", total)
+        );
+    }
+    @FXML
+    private void handleRemoveCartItem() {
+
+        Cart selectedCartItem =
+                cartTable
+                        .getSelectionModel()
+                        .getSelectedItem();
+
+        if (selectedCartItem == null) {
+            showError(
+                    "Please select an item from the cart."
+            );
+            return;
+        }
+
+        cartData.remove(selectedCartItem);
+
+        updateCartTotal();
+
+        showSuccess(
+                "Item removed from cart."
+        );
+    }
+    @FXML
+    private void handleClearCart() {
+
+        if (cartData.isEmpty()) {
+            showError("The cart is already empty.");
+            return;
+        }
+
+        Alert confirmationAlert =
+                new Alert(Alert.AlertType.CONFIRMATION);
+
+        confirmationAlert.setTitle("Clear Cart");
+        confirmationAlert.setHeaderText("Confirm Cart Clearance");
+        confirmationAlert.setContentText(
+                "Are you sure you want to remove all items from the cart?"
+        );
+
+        confirmationAlert.showAndWait().ifPresent(buttonType -> {
+
+            if (buttonType == ButtonType.OK) {
+
+                cartData.clear();
+
+                updateCartTotal();
+
+                showSuccess("Cart cleared successfully.");
+            }
+        });
+    }
+    @FXML
+    private void handleCheckout() {
+
+        if (cartData.isEmpty()) {
+            showError("The cart is empty.");
+            return;
+        }
+
+        double originalCartTotal = 0;
+        double totalAfterBulkDiscount = 0;
+
+        for (Cart cartItem : cartData) {
+
+            Inventory inventoryItem =
+                    cartItem.getInventoryItem();
+
+            double originalSubtotal =
+                    inventoryItem.getPrice()
+                            * cartItem.getPurchaseQuantity();
+
+            originalCartTotal += originalSubtotal;
+
+            totalAfterBulkDiscount +=
+                    cartItem.getDiscountedSubtotal();
+        }
+
+        double bulkDiscountAmount =
+                originalCartTotal
+                        - totalAfterBulkDiscount;
+
+        boolean hasEngineItem = false;
+        boolean hasElectricalItem = false;
+
+        for (Cart cartItem : cartData) {
+
+            String category =
+                    cartItem.getInventoryItem()
+                            .getCategory();
+
+            if (category.equalsIgnoreCase("Engine")) {
+                hasEngineItem = true;
+            }
+
+            if (category.equalsIgnoreCase("Electrical")) {
+                hasElectricalItem = true;
+            }
+        }
+
+        boolean synergyDiscountApplied =
+                hasEngineItem && hasElectricalItem;
+
+        double synergyDiscountAmount = 0;
+
+        if (synergyDiscountApplied) {
+            synergyDiscountAmount =
+                    totalAfterBulkDiscount * 0.10;
+        }
+
+        double finalTotal =
+                totalAfterBulkDiscount
+                        - synergyDiscountAmount;
+
+        Alert confirmationAlert =
+                new Alert(Alert.AlertType.CONFIRMATION);
+
+        confirmationAlert.setTitle("Checkout");
+        confirmationAlert.setHeaderText(
+                "Confirm Purchase"
+        );
+
+        confirmationAlert.setContentText(
+                String.format(
+                        "Original Total: $%.2f%n"
+                                + "Bulk Discount: -$%.2f%n"
+                                + "Total After Bulk Discount: $%.2f%n"
+                                + "Synergy Discount: -$%.2f%n"
+                                + "Final Total: $%.2f%n%n"
+                                + "Do you want to complete the purchase?",
+                        originalCartTotal,
+                        bulkDiscountAmount,
+                        totalAfterBulkDiscount,
+                        synergyDiscountAmount,
+                        finalTotal
+                )
+        );
+
+        confirmationAlert
+                .showAndWait()
+                .ifPresent(buttonType -> {
+
+                    if (buttonType == ButtonType.OK) {
+                        completeCheckout(finalTotal);
+                    }
+                });
+    }
+    private void completeCheckout(double finalTotal) {
+
+        for (Cart cartItem : cartData) {
+
+            Inventory inventoryItem =
+                    cartItem.getInventoryItem();
+
+            int updatedQuantity =
+                    inventoryItem.getQuantity()
+                            - cartItem.getPurchaseQuantity();
+
+            inventoryItem.setQuantity(
+                    updatedQuantity
+            );
+        }
+
+        inventoryTable.refresh();
+        searchResultsTable.refresh();
+
+        loadLowStockItems();
+
+        cartData.clear();
+
+        updateCartTotal();
+
+        updateInventorySummary();
+
+        showSuccess(
+                String.format(
+                        "Checkout completed successfully.%n"
+                                + "Final Total: $%.2f",
+                        finalTotal
+                )
+        );
+    }
+    private void loadLowStockItems() {
+
+        ObservableList<Inventory> lowStockItems = FXCollections.observableArrayList();
+        for (Inventory item : inventoryData) {
+            if (item.getQuantity() < item.getThreshold()) {
+                lowStockItems.add(item);
+            }
+        }
+        lowStockTable.setItems(lowStockItems);
     }
 }

@@ -307,17 +307,100 @@
                 </Tab>
 
                 <!-- Point of Sale Tab -->
-                <Tab text="Point Of Sale"
-                     closable="false">
+                <Tab text="Point Of Sale" closable="false">
 
                     <BorderPane>
+
+                        <top>
+                            <VBox spacing="10"
+                                  style="-fx-padding: 15;">
+
+                                <Label text="Point of Sale"
+                                       style="-fx-font-size: 18px;
+                              -fx-font-weight: bold;" />
+
+                                <HBox spacing="10">
+
+                                    <TextField fx:id="posPartCodeField"
+                                               promptText="Part Code" />
+
+                                    <TextField fx:id="posQuantityField"
+                                               promptText="Quantity" />
+
+                                    <Button text="Add to Cart"
+                                            onAction="#handleAddToCart" />
+
+                                </HBox>
+
+                            </VBox>
+                        </top>
+
                         <center>
-                            <Label text="Point-of-sale cart will be added here." />
+                            <TableView fx:id="cartTable">
+
+                                <columns>
+
+                                    <TableColumn fx:id="cartPartCodeColumn"
+                                                 text="Part Code"
+                                                 prefWidth="100" />
+
+                                    <TableColumn fx:id="cartPartNameColumn"
+                                                 text="Part Name"
+                                                 prefWidth="180" />
+
+                                    <TableColumn fx:id="cartQuantityColumn"
+                                                 text="Quantity"
+                                                 prefWidth="100" />
+
+                                    <TableColumn fx:id="cartPriceColumn"
+                                                 text="Unit Price"
+                                                 prefWidth="100" />
+
+                                    <TableColumn fx:id="cartSubtotalColumn"
+                                                 text="Subtotal"
+                                                 prefWidth="120" />
+
+                                </columns>
+
+                            </TableView>
                         </center>
+
+                        <bottom>
+                            <VBox spacing="10"
+                                  style="-fx-padding: 15;">
+
+                                <HBox spacing="20">
+
+                                    <Label text="Cart Total:"
+                                           style="-fx-font-size: 16px;
+                                  -fx-font-weight: bold;" />
+
+                                    <Label fx:id="cartTotalLabel"
+                                           text="0.00"
+                                           style="-fx-font-size: 16px;
+                                  -fx-font-weight: bold;" />
+
+                                </HBox>
+
+                                <HBox spacing="10">
+
+                                    <Button text="Remove Selected Item"
+                                            onAction="#handleRemoveCartItem" />
+
+                                    <Button text="Clear Cart"
+                                            onAction="#handleClearCart" />
+
+                                    <Button text="Checkout"
+                                            onAction="#handleCheckout" />
+
+                                </HBox>
+
+                            </VBox>
+                        </bottom>
+
                     </BorderPane>
 
                 </Tab>
-
             </tabs>
 
         </TabPane>

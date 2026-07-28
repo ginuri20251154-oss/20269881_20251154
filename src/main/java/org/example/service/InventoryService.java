@@ -54,7 +54,9 @@ public class InventoryService {
                     double price = Double.parseDouble(priceText);
                     int quantity = Integer.parseInt(data[4].trim());
 
+
                     String category = data[5].trim();
+                    category = category.substring(0, 1).toUpperCase() + category.substring(1).toLowerCase();
                     String stockDate = data[6].trim();
 
                     String imageName = "No Image";
