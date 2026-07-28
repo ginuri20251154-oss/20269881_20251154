@@ -13,7 +13,8 @@ A JavaFX desktop application for managing inventory, tracking dealers, and proce
 * **Graphical User Interface:** Interactive UI built with JavaFX (`Main.fxml`).
 
 ---
-
+## Assumptions
+* `inventory_legacy_original.txt` is a pristine, untouched copy of the original dirty legacy data (mixed `,` / `|` / `;` delimiters, inconsistent whitespace, currency variants, mixed-case categories, and multiple date formats). It is never read or written by the application — it exists so the dirty-data parsing can be demonstrated even after `inventory_legacy.txt` has been normalised by repeated saves.
 ## Project Structure
 
 ```text

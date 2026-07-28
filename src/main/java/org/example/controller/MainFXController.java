@@ -1340,7 +1340,7 @@ public class MainFXController {
         }
 
         cartTotalLabel.setText(
-                String.format("$%.2f", total)
+                String.format("Rs.%.2f", total)
         );
     }
     @FXML
@@ -1467,11 +1467,11 @@ public class MainFXController {
 
         confirmationAlert.setContentText(
                 String.format(
-                        "Original Total: $%.2f%n"
-                                + "Bulk Discount: -$%.2f%n"
-                                + "Total After Bulk Discount: $%.2f%n"
-                                + "Synergy Discount: -$%.2f%n"
-                                + "Final Total: $%.2f%n%n"
+                        "Original Total: $Rs.2f%n"
+                                + "Bulk Discount: -Rs%.2f%n"
+                                + "Total After Bulk Discount: Rs%.2f%n"
+                                + "Synergy Discount: -Rs%.2f%n"
+                                + "Final Total: Rs%.2f%n%n"
                                 + "Do you want to complete the purchase?",
                         originalCartTotal,
                         bulkDiscountAmount,
@@ -1527,7 +1527,7 @@ public class MainFXController {
         showSuccess(
                 String.format(
                         "Checkout completed successfully.%n"
-                                + "Final Total: $%.2f",
+                                + "Final Total: Rs%.2f",
                         finalTotal
                 )
         );

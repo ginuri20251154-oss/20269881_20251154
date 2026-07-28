@@ -1,0 +1,3 @@
+P001,Bajaj 4-Stroke Piston,Bajaj,4500.0,15,Engine,2023-10-12,piston.jpg
+P002,Brake Pad,TVS,1250.0,8,Brakes,2023-12-01,brake.png
+P003,Tyre,Unknown,6500.0,24,Bodywork,2023-11-01,tyre.png
